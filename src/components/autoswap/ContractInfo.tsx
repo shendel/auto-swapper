@@ -17,6 +17,7 @@ import BigNumber from "bignumber.js"
 import ChangeRecieverForm from '@/components/autoswap/ChangeRecieverForm'
 import ChangeOwnerForm from '@/components/autoswap/ChangeOwnerForm'
 import ChangeMinAmountForm from '@/components/autoswap/ChangeMinAmountForm'
+import WithdrawEthForm from '@/components/autoswap/WithdrawEthForm'
 
 const ContractInfo = (props) => {
   const {
@@ -81,6 +82,23 @@ const ContractInfo = (props) => {
       )
     })
   }
+  const handleWithdrawEth = () => {
+    
+    openModal({
+      title: `Withdraw native currency`,
+      hideBottomButtons: true,
+      fullWidth: true,
+      id: 'WITHDRAW_ETH_FORM',
+      content: (
+        <WithdrawEthForm
+          chainId={chainId}
+          contractAddress={contractAddress}
+          ethBalance={contractInfo.ethBalance}
+          onChange={() => { updateInfo() }}
+        />
+      )
+    })
+  }
   
   return (
     <div className="mt-6">
@@ -136,7 +154,7 @@ const ContractInfo = (props) => {
             readOnly={true}
             buttons={(
               <Button
-                onClick={() => {}}
+                onClick={handleWithdrawEth}
                 isDisabled={(new BigNumber(contractInfo.ethBalance).isEqualTo(0)) || !isOwner}
               >
                 {`Withdraw`}
