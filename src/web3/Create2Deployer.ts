@@ -1,0 +1,8 @@
+const Create2Deployer = {
+  1: '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2',
+  25: '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2',
+  56: '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2',
+  97: '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2',
+}
+
+export default Create2Deployer
