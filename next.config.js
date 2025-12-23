@@ -13,7 +13,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     NODE_ENV: process.env.NODE_ENV,
     TITLE: "AutoSwapper",
-    NEXT_PUBLIC_PROJECT_ID: "b87a3c44755d7f346d350330ca573223"
+    NEXT_PUBLIC_PROJECT_ID: "fe249a639c4283be32d2afb0cde8412d"
   }
 }
 
