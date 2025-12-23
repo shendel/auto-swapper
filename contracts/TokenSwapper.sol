@@ -86,7 +86,7 @@ interface IUniswapV3Pool {
         returns (uint160 sqrtPriceX96, int24 tick, uint16 observationIndex, uint16 observationCardinality, uint16 observationCardinalityNext, uint8 feeProtocol, bool unlocked);
 }
 
-contract TokenSwapper is ReentrancyGuard  {
+contract InoPay is ReentrancyGuard  {
     enum DexVersion { V2, V3 }
 
     address public owner;

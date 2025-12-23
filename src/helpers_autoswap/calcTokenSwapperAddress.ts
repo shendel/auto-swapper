@@ -13,13 +13,34 @@ const calcTokenSwapperAddress = (options) => {
   const web3 = new Web3()
 
   const saltHash = web3.utils.keccak256(salt)
-  console.log('calcTokenSwapperAddress', TokenSwapperData.data.bytecode)
-  return getCreate2Address({
-    deployerAddress: Create2Deployer[chainId],
-    salt: saltHash,
-    bytecode: TokenSwapperData.data.bytecode.object,
-    abi: TokenSwapperData.abi,
-    args: [owner]
+  
+  return new Promise((resolve, reject) => {
+    const artifactUrl = `/Contract.json`;
+    console.log('... artifactUrl', artifactUrl)
+    // 1. Загружаем артефакт через fetch (Promise)
+    fetch(artifactUrl)
+      .then(response => {
+        console.log('>>> then', response)
+        if (!response.ok) {
+          reject(`Failed to load artifact: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(artifact => {
+        console.log('>>> Fetched', artifact)
+        console.log('calcTokenSwapperAddress', artifact.data.bytecode)
+        const address = getCreate2Address({
+          deployerAddress: Create2Deployer[chainId],
+          salt: saltHash,
+          bytecode: artifact.data.bytecode.object,
+          abi: artifact.abi,
+          args: [owner]
+        })
+        resolve(address)
+      })
+      .catch(err => {
+        reject(new Error(`Deploy failed: ${err.message}`));
+      });
   })
 }
 

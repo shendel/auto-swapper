@@ -90,15 +90,17 @@ const SelectContract = (props) => {
   useEffect(() => {
     if (contractChainId && contractSalt && contractOwner && isValidEvmAddress(contractOwner) ) {
       try {
-        const calcedContractAddress = calcTokenSwapperAddress({
+        calcTokenSwapperAddress({
           chainId: contractChainId,
           salt: contractSalt,
           owner: contractOwner
+        }).then((calcedContractAddress) => {
+          setIsDeployed(false)
+          console.log('calcedContractAddress', calcedContractAddress)
+          setContractAddress(calcedContractAddress)
+        }).catch((err) => {
+          console.log('>> err', err)
         })
-        setIsDeployed(false)
-        setContractAddress(calcedContractAddress)
-        
-        console.log('>> Address:', calcedContractAddress)
       } catch (err) {
         console.log('Fail calc address', err)
       }
@@ -131,21 +133,6 @@ const SelectContract = (props) => {
   const [ isDeploying, setIsDeploying ] = useState(false)
 
   const handleDeploy = () => {
-    if (contractOwner.toLowerCase() != injectedAccount.toLowerCase()) {
-      openModal({
-        title: 'Warning!',
-        fullWidth: true,
-        isAlert: true,
-        description: (
-          <div className="text-red-500 text-bold">
-            <div>{`The connected wallet differs from the one specified in the deployment parameters (Owner, used for initialization)!`}</div>
-            <div>{`The contract address will be different from the generated one.`}</div>
-          </div>
-        )
-      })
-    } else {
-      _deploy()
-    }
     const _deploy = () => {
       setIsDeploying(true)
       addNotification('info', 'Confirm deploy transaction')
@@ -176,6 +163,21 @@ const SelectContract = (props) => {
         addNotification('error', 'Fail deploy contract')
         setIsDeploying(false)
       })
+    }
+    if (contractOwner.toLowerCase() != injectedAccount.toLowerCase()) {
+      openModal({
+        title: 'Warning!',
+        fullWidth: true,
+        isAlert: true,
+        description: (
+          <div className="text-red-500 text-bold">
+            <div>{`The connected wallet differs from the one specified in the deployment parameters (Owner, used for initialization)!`}</div>
+            <div>{`The contract address will be different from the generated one.`}</div>
+          </div>
+        )
+      })
+    } else {
+      _deploy()
     }
   }
 
