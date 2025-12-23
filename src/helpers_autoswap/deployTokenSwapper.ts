@@ -10,7 +10,7 @@ const deployTokenSwapper = (options) => {
     salt,
     owner
   } = options
-  const artifactUrl = `/Contract.json`;
+  const artifactUrl = `./Contract.json`;
 
   // 1. Загружаем артефакт через fetch (Promise)
   return fetch(artifactUrl)

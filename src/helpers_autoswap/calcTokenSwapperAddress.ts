@@ -15,7 +15,7 @@ const calcTokenSwapperAddress = (options) => {
   const saltHash = web3.utils.keccak256(salt)
   
   return new Promise((resolve, reject) => {
-    const artifactUrl = `/Contract.json`;
+    const artifactUrl = `./Contract.json`;
     console.log('... artifactUrl', artifactUrl)
     // 1. Загружаем артефакт через fetch (Promise)
     fetch(artifactUrl)
