@@ -89,6 +89,7 @@ interface IUniswapV3Pool {
 contract InoPay is ReentrancyGuard  {
     enum DexVersion { V2, V3 }
 
+    uint256 public constant version = 2;
     address public owner;
     address public targetToken;
     address public routerV2;

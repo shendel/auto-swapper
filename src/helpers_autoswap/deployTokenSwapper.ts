@@ -22,19 +22,13 @@ const deployTokenSwapper = (options) => {
     })
     .then(artifact => {
       console.log('>>> Fetched on deploye', artifact)
-      // 2. Извлекаем bytecode и ABI (поддержка разных форматов)
-      const bytecode = artifact.data?.bytecode?.object || artifact.bytecode;
-      const abi = artifact.abi || (artifact.contract && artifact.contract.abi);
 
-      if (!bytecode || !abi) {
-        throw new Error('Invalid artifact: missing bytecode or ABI');
-      }
       const web3 = new Web3()
 
       return deployContractViaCreate2({
         activeWeb3,
-        bytecode: bytecode,
-        abi: abi,
+        bytecode: artifact.data.bytecode.object,
+        abi: artifact.abi,
         constructorArgs: [owner],
         factoryAddress: Create2Deployer[chainId],
         salt: web3.utils.keccak256(salt)
