@@ -100,6 +100,7 @@ const ContractInfo = (props) => {
     })
   }
   
+  if (!chainInfo) return null
   return (
     <div className="mt-6">
       <InfoField>{`Contract summary info`}</InfoField>

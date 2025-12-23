@@ -21,7 +21,7 @@ import { useConfirmationModal } from '@/components/ConfirmationModal'
 import { getTransactionLink, getShortTxHash, getShortAddress, getAddressLink } from '@/helpers/etherscan'
 import { useInjectedWeb3 } from '@/web3/InjectedWeb3Provider'
 import { isValidEvmAddress } from '@/helpers/etherscan'
-
+import { GET_CHAIN_BYID } from '@/web3/chains'
 import InitContractForm from '@/components/autoswap/InitContractForm'
 
 import { SUPPORTED_CHAINS } from '@/config'
@@ -87,8 +87,9 @@ const SelectContract = (props) => {
       setContractAddress(``)
     }
   }, [ contractOwner ])
+  
   useEffect(() => {
-    if (contractChainId && contractSalt && contractOwner && isValidEvmAddress(contractOwner) ) {
+    if (contractChainId && GET_CHAIN_BYID(contractChainId) && contractSalt && contractOwner && isValidEvmAddress(contractOwner) ) {
       try {
         calcTokenSwapperAddress({
           chainId: contractChainId,
@@ -105,11 +106,20 @@ const SelectContract = (props) => {
         console.log('Fail calc address', err)
       }
     }
+    if (!GET_CHAIN_BYID(contractChainId)) {
+      setIsDeployed(false)
+      setContractAddress(``)
+      setContractInfo(false)
+    }
   }, [ contractChainId, contractSalt, contractOwner ])
   
   useEffect(() => {
     setIsDeployed(false)
-    if ((contractChainId && contractAddress) || (isDeployedUpdate && contractChainId && contractSalt)) {
+    if (
+      (contractChainId && contractAddress && GET_CHAIN_BYID(contractChainId))
+      ||
+      (isDeployedUpdate && contractChainId && GET_CHAIN_BYID(contractChainId) && contractSalt)
+    ) {
       setIsDeployedFetch(true)
       setIsDeployedUpdate(false)
       setAllowedTokens([])
@@ -188,7 +198,11 @@ const SelectContract = (props) => {
   const [ isOwner, setIsOwner ] = useState(false)
 
   useEffect(() => {
-    if ((contractAddress && contractChainId && isDeployed) || (contractInfoUpdate && contractAddress && contractChainId && isDeployed)) {
+    if (
+      (contractAddress && contractChainId && GET_CHAIN_BYID(contractChainId) && isDeployed)
+      ||
+      (contractInfoUpdate && contractAddress && contractChainId && GET_CHAIN_BYID(contractChainId) && isDeployed)
+    ) {
       setContractInfoUpdate(false)
       if (contractInfoFetching) return
       setContractInfoFetching(true)
@@ -257,6 +271,9 @@ const SelectContract = (props) => {
       setIsIniting(false)
     })
   }
+  
+  const chainInfo = GET_CHAIN_BYID(contractChainId)
+  
   return (
     <div>
       <InfoField>{`For generate the address of AutoSwap contract, a Unique key and the wallet address of the person who deployed and initialized the contract are used.`}</InfoField>
@@ -295,7 +312,7 @@ const SelectContract = (props) => {
         </div>
       </div>
       
-      {(contractChainId && contractAddress) && (
+      {(contractChainId && contractAddress && chainInfo) && (
         <div className="mt-2">
           {!isDeployed && (
             <>
